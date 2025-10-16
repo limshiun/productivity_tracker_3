@@ -1,0 +1,4 @@
+src/yolo_v12/__pycache__
+src/__pycache__
+src/yolo_v12/trackers/__pycache__
+*.pt

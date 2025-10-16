@@ -1,0 +1,126 @@
+# ---- Client / Camera metadata ----
+client:
+  id: "CAM-001"
+  name: "My Camera"
+  location: "Warehouse A"
+
+# ---- Input source ----
+input:
+  source: "rtsp://admin:L26D1169@192.170.5.140:554/cam/realmonitor?channel=1&subtype=0" # replace with your RTSP if needed rtsp://admin:L26D1169@192.170.5.140:554/cam/realmonitor?channel=1&subtype=0
+  loop_file: false
+  fps_override: null
+  read_timeout_sec: 10
+  reconnect_delay_sec: 5
+
+# ---- Tracking (used by CentroidTracker) ----
+tracking:
+  enabled: true
+  # tracker_type isn't read by main.py, but keep for clarity
+  tracker_type: "centroid"
+  max_lost_secs: 1.5 # Reduced for faster tracking updates
+  min_iou_match: 0.25 # Reduced for better matching
+  max_age: 30 # not read by main.py but harmless
+  min_hits: 3 # not read by main.py but harmless
+
+# ---- Analytics (everything main.py asks for) ----
+# ---- Parameters for behavior detection ----
+analytics:
+  fps_assumed: 10.0 # Reduced for better performance
+  loiter_seconds: 8.0 # Reduced for faster detection
+  active_speed_px_per_s: 30.0 # Reduced threshold for better sensitivity
+  phone_overlap_iou: 0.15 # Increased for better phone detection
+  food_min_speed_px_per_s: 25.0
+
+  # For IdleObjects branch (used only if branches.idle_objects=true)
+  idle_min_iou: 0.30
+  idle_max_lost_secs: 2.0
+  idle_min_dwell_sec: 2.0
+
+# ---- Branch toggles (main.py checks these) ----
+branches:
+  phone_usage: true
+  ppe_compliance: false
+  people_behavior: true
+  food_containers: false
+  idle_objects: false
+
+# ---- Region of interest ----
+roi:
+  polygon:
+    - [120, 220] # top-left (moved up/left)
+    - [460, 1080] # bottom-left (extended to bottom edge)
+    - [1745, 1078] # bottom-right (extended right & to bottom edge)
+    - [998, 250] # top-right (moved up/right)
+  empty_areas: [] # add named polygons here if using idle_objects
+
+# ---- Models (Detector consumes this) ----
+models:
+  person:
+    weights: "yolov8s.pt" # Changed to smaller, faster model
+    conf: 0.45 # Increased for better accuracy
+    iou: 0.35 # Slightly reduced for better detection
+    classes: [0] # person
+  phone:
+    weights: "yolov8s.pt" # Changed to smaller, faster model
+    conf: 0.50 # Increased for better accuracy
+    iou: 0.45 # Slightly reduced for better detection
+    classes: [67] # cell phone
+  food:
+    weights: null # set to your trained bento/container model if you have one
+    conf: 0.30
+    iou: 0.50
+    classes: [] # fill if your model uses class IDs
+  ppe:
+    mask_model: "assets/mask_detector.onnx" # or null
+    sleeve_model: null
+
+# ---- Scheduler Configuration ----
+scheduler:
+  start_hour: 7 # 7 AM
+  start_minute: 0
+  end_hour: 17 # 5 PM
+  end_minute: 0
+  timezone_offset: 0 # Local timezone
+
+# ---- Output / Windows / Video ----
+output:
+  show_window: false # Disabled for headless operation
+  save_video: false # Disabled for headless operation
+  save_path: "runs/output.mp4"
+
+  draw:
+    show_roi: true # Enable for UI visualization
+    show_tracks: true # Enable for UI visualization
+    show_boxes: true # Enable for UI visualization
+    show_labels: true # Enable for UI visualization
+    show_counters: true # Enable for UI visualization
+
+  # New-style events config (what main.py prefers)
+  events:
+    track_state:
+      enabled: false
+      mode: file
+      file_path: "runs/track_state.jsonl"
+      min_interval_sec: 0
+    summary:
+      enabled: true
+      mode: pg
+      dsn: "postgresql://postgres:1010@localhost:5432/events"
+      table: "raw_events"
+      min_interval_sec: 5
+      aggregate_window_sec: 60
+
+  # Legacy jsonl block (main.py reads only aggregate_window_sec from here)
+  jsonl:
+    enabled: false
+    path: "runs/summary.jsonl"
+    aggregate_window_sec: 60
+
+  # Optional sentry mode override (main.py will switch modes if enabled)
+  sentry_mode:
+    enabled: true # Enable sentry mode for headless operation
+    log_events: true
+
+# ---- Logging ----
+logging:
+  level: "INFO"

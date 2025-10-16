@@ -1,0 +1,21 @@
+2025-10-02 11:38:54,070 INFO ============================================================
+2025-10-02 11:38:54,070 INFO Productivity Tracker - UI Startup
+2025-10-02 11:38:54,070 INFO ============================================================
+2025-10-02 11:38:54,070 INFO 
+--- Dependencies Check ---
+2025-10-02 11:38:54,070 INFO Checking UI dependencies...
+2025-10-02 11:38:56,338 ERROR Missing packages: ['flask-socketio', 'eventlet', 'opencv-python', 'pyyaml', 'psycopg2-binary']
+2025-10-02 11:38:56,338 INFO Installing missing packages...
+2025-10-02 11:39:05,724 INFO Dependencies installed successfully
+2025-10-02 11:39:05,727 INFO 
+--- Configuration Check ---
+2025-10-02 11:39:05,727 INFO Checking configuration...
+2025-10-02 11:39:05,736 INFO 
+--- PostgreSQL Check ---
+2025-10-02 11:39:05,736 INFO Checking PostgreSQL connection...
+2025-10-02 11:39:05,784 INFO 
+============================================================
+2025-10-02 11:39:05,784 INFO Starting UI application...
+2025-10-02 11:39:05,784 INFO ============================================================
+2025-10-02 11:39:05,784 INFO Starting Productivity Tracker UI...
+2025-10-02 11:39:05,789 ERROR Error running UI app: No module named 'yolo_v12'
