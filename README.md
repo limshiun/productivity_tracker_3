@@ -2,4 +2,4 @@
 # productivity_tracker_3
 =======
 ﻿Productivity Tracker
->>>>>>> 2323585 (Initial commit)
+click into productivity folder to access full picture
